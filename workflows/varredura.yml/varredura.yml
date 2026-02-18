@@ -1,0 +1,27 @@
+name: Varredura Automática Edge Analytics
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Roda a cada 6 horas
+  workflow_dispatch: # Permite rodar manualmente no site do GitHub
+
+jobs:
+  run-miner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar Código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar Bibliotecas
+        run: pip install -r requirements.txt
+
+      - name: Rodar Minerador
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: python worker_saas.py
