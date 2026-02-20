@@ -29,7 +29,7 @@ def carregar_dados(tipo):
         query = f"""SELECT fixture_name, probabilidade, odd_justa, odd_mercado, valor_ev 
                    FROM analysis_logs 
                    WHERE mercado_tipo LIKE '%{tipo}%' 
-                   AND created_at >= NOW() - INTERVAL '24 HOURS'
+                   AND created_at >= CURRENT_DATE - INTERVAL '1 day'
                    ORDER BY valor_ev DESC LIMIT 50"""
         df = pd.read_sql(query, conn)
         conn.close()
@@ -100,5 +100,6 @@ if not df.empty:
 else:
     st.warning(f"Nenhum jogo de {mercado} processado nas últimas 24h.")
     st.info("Execute o seu minerador no computador para atualizar os dados.")
+
 
 st.caption(f"Sistema Edge Analytics | Atualizado em: {datetime.now().strftime('%H:%M:%S')}")
